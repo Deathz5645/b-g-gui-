@@ -1,0 +1,315 @@
+-- raw bc im nice
+if game:GetService("CoreGui"):FindFirstChild("xML") then
+	game:GetService("CoreGui"):FindFirstChild("xML"):Destroy()
+	for _, v in pairs(_G.Events) do
+		v:Disconnect()
+	end
+end
+
+local UI = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local Cx = Instance.new("ScrollingFrame")
+local Layout = Instance.new("UIListLayout")
+local Title = Instance.new("TextLabel")
+local CC = Instance.new("TextButton")
+local Keybind = Instance.new("TextLabel")
+local plr = game:GetService("Players").LocalPlayer
+_G.Events = {}
+
+UI.Name = "xML"
+UI.Parent = game:GetService("CoreGui")
+UI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Main.Name = "Main"
+Main.Parent = UI
+Main.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
+Main.BackgroundTransparency = 0.1
+Main.BorderColor3 = Color3.fromRGB(172, 172, 172)
+Main.Position = UDim2.new(0.626171708, 0, 0.5, 0)
+Main.Size = UDim2.new(0, 510, 0, 282)
+Main.Visible = true
+Cx.Name = "Cx"
+Cx.Parent = Main
+Cx.Active = true
+Cx.BackgroundColor3 = Color3.fromRGB(32, 32, 33)
+Cx.Position = UDim2.new(0.0156862754, 0, 0.177304968, 0)
+Cx.Size = UDim2.new(0, 494, 0, 224)
+Cx.CanvasSize = UDim2.new(0, 0, 0, 0)
+Cx.ScrollBarThickness = 6
+Layout.Name = "Layout"
+Layout.Parent = Cx
+Layout.SortOrder = Enum.SortOrder.LayoutOrder
+Title.Name = "Title"
+Title.Parent = Main
+Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundTransparency = 1.000
+Title.Position = UDim2.new(0.0156862754, 0, 0, 0)
+Title.Size = UDim2.new(0, 277, 0, 38)
+Title.Font = Enum.Font.ArialBold
+Title.Text = "B&G v2"
+Title.TextColor3 = Color3.fromRGB(188, 0, 3)
+Title.TextSize = 23.000
+Title.TextWrapped = true
+Title.TextXAlignment = Enum.TextXAlignment.Left
+CC.Name = "CC"
+CC.Parent = Main
+CC.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CC.BackgroundTransparency = 1.000
+CC.BorderSizePixel = 0
+CC.Position = UDim2.new(0.762745082, 0, 0.0248226952, 0)
+CC.Size = UDim2.new(0, 113, 0, 28)
+CC.Font = Enum.Font.ArialBold
+CC.Text = "By Deathz"
+CC.TextColor3 = Color3.fromRGB(198, 198, 198)
+CC.TextSize = 17.000
+CC.TextXAlignment = Enum.TextXAlignment.Right
+CC.TextYAlignment = Enum.TextYAlignment.Top
+Keybind.Name = "Keybind"
+Keybind.Parent = Main
+Keybind.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Keybind.BackgroundTransparency = 1.000
+Keybind.Position = UDim2.new(0.0156862754, 0, 0.124113478, 0)
+Keybind.Size = UDim2.new(0, 140, 0, 15)
+Keybind.Font = Enum.Font.ArialBold
+Keybind.Text = "Toggle Key: H"
+Keybind.TextColor3 = Color3.fromRGB(112, 112, 112)
+Keybind.TextSize = 15.000
+Keybind.TextXAlignment = Enum.TextXAlignment.Left
+
+local Player = function(Ev)
+	local DataBase = {}
+
+	if type(Ev) == "string" then
+		if Ev == "all" then
+			for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+				if v.Name ~= plr.Name then
+					table.insert(DataBase, v)
+				end
+			end
+		elseif Ev == "random" then
+            while wait() do
+                local GetRandomUser = game:GetService("Players"):GetPlayers()[math.random(1, #game:GetService("Players"):GetPlayers())]
+                if GetRandomUser ~= plr.Name then
+	    			table.insert(DataBase, game:GetService("Players"):GetPlayers()[math.random(1, #game:GetService("Players"):GetPlayers())])
+                    break
+		    	end
+            end
+		elseif Ev == "me" then
+			table.insert(DataBase, plr)
+		else
+			for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+				if v.Name:lower():sub(1, #Ev) == Ev:lower() or v.DisplayName:lower():sub(1, #Ev) == Ev then
+					table.insert(DataBase, v)
+				end
+			end
+		end
+	end
+    
+    if #DataBase == 0 then
+        return nil
+    end
+	return DataBase
+end
+
+local AddCommand = function(Command, IsString, IsButton, Func)
+    Cx.CanvasSize = UDim2.new(0, 0, (Cx.CanvasSize.Y.Scale + 0.215), 0)
+	local Stuff = Instance.new("Frame")
+	local Info = Instance.new("TextLabel")
+	local Button, String
+	Stuff.Name = "Stuff"
+	Stuff.Parent = Cx
+	Stuff.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Stuff.BackgroundTransparency = 1.000
+	Stuff.Size = UDim2.new(0, 494, 0, 60)
+	Info.Name = "Info"
+	Info.Parent = Stuff
+	Info.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Info.BackgroundTransparency = 1.000
+	Info.Size = UDim2.new(0, 115, 0, 49)
+	Info.Font = Enum.Font.ArialBold
+	Info.Text = "  " .. Command
+	Info.TextColor3 = Color3.fromRGB(181, 0, 3)
+	Info.TextSize = 20.000
+	Info.TextWrapped = true
+	Info.TextXAlignment = Enum.TextXAlignment.Left
+
+	if IsString then
+		String = Instance.new("TextBox")
+		String.Name = "Insert"
+		String.Parent = Stuff
+		String.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+		String.BorderColor3 = Color3.fromRGB(63, 99, 124)
+		String.BorderSizePixel = 0
+		String.Position = UDim2.new(0.232793525, 0, 0.116666667, 0)
+		String.Size = UDim2.new(0, 168, 0, 41)
+		String.Font = Enum.Font.SourceSans
+		String.Text = "Insert"
+		String.TextColor3 = Color3.fromRGB(176, 176, 176)
+		String.TextSize = 27.000
+		String.TextWrapped = true
+	end
+	
+	if IsButton then
+		Button = Instance.new("TextButton")
+		Button.Name = "Activate"
+		Button.Parent = Stuff
+		Button.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+		Button.BorderSizePixel = 0
+		Button.Size = UDim2.new(0, 110, 0, 41)
+		Button.Font = Enum.Font.ArialBold
+		Button.Text = "Enable"
+		Button.TextColor3 = Color3.fromRGB(48, 180, 41)
+		Button.TextSize = 19.000
+		Button.TextWrapped = true
+		Button.MouseButton1Click:Connect(function()
+			Func(Button, String, Args)
+		end)
+		
+		if IsButton and IsString then
+			Button.Position = UDim2.new(0.587044537, 0, 0.116666667, 0)
+		elseif IsButton and IsString == false then
+			Button.Position = UDim2.new(0.2, 0, 0.116666667, 0)
+		end
+	end
+end
+
+local Fire = function(x1, x2, x3)
+    plr.Character.PompousTheCloud.ServerControl:InvokeServer("SetProperty", {["Object"] = x1, ["Property"] = x2, ["Value"] = x3})
+end
+
+local Cloud = function(Animation)
+    if not plr.Backpack:FindFirstChild("PompousTheCloud") and not plr.Character:FindFirstChild("PompousTheCloud") then
+        workspace:FindFirstChild("Buy"):FireServer(0, "PompousTheCloud"); plr.Backpack:WaitForChild("PompousTheCloud").Parent = plr.Character
+    elseif plr.Backpack:FindFirstChild("PompousTheCloud") then
+        plr.Backpack.PompousTheCloud.Parent = plr.Character
+    end
+
+    plr.Character:WaitForChild("PompousTheCloud").LocalScript.Disabled = true
+
+    if Animation and wait(0.1) then
+        plr.Character.PompousTheCloud.ServerControl:InvokeServer("Fly", {["Flying"] = true})
+        Fire(plr.Character.PompousTheCloud.EffectCloud.Mesh, "Scale", Vector3.new(0, 0, 0))
+        for _, v in pairs(plr.Character.Humanoid:GetPlayingAnimationTracks()) do
+            v:Stop()
+        end
+    end
+end
+
+_G.Events[#_G.Events + 1] = plr:GetMouse().KeyDown:Connect(function(Key)
+	if Key == "h" then
+		if Main.Visible == false then
+			Main.Visible = true
+			Main:TweenPosition(UDim2.new(0.626171708, 0, 0.5, 0), "Out", "Linear", 0.3)
+		else
+			Main:TweenPosition(UDim2.new(0.626171708, 0, 1.5, 0), "In", "Linear", 0.3); wait(0.3) Main.Visible = false
+		end
+	end
+end)
+
+local function HGLRDW_fake_script() -- ShirtID.ID 
+    local script = Instance.new('LocalScript', ShirtID)
+
+    script.Parent.Text = plr.Character.Shirt.ShirtTemplate
+end
+coroutine.wrap(function()
+    while Main do
+        for i = 1, 255, 4 do
+            Main.BorderColor3 = Color3.fromHSV(i/256, 1, 1); wait(0.2)
+        end
+    end
+end)()
+
+--[[
+	[ Info ]
+		1st Argument is the command, Ex: "gun" "dance" "spawn vis"
+		2nd Argument is if it requires strings, Ex: "kill player" "void player" "song id" (if string is true then button must be true)
+		3rd Argument is if it requires a button, Ex: [ "voiding" = true/false (Activattion)]
+		4th Argument is the function, Ex: "Health = 0" "Head:Destroy()" "Head.Material = 'Neon'"
+]]
+
+AddCommand("respawn", false, true, function(Button, String)
+	if plr.Character then
+		local Root = plr.Character.HumanoidRootPart 
+		local sD, sp = plr.Character
+		
+		plr.Character = nil
+		plr.Character = sD; wait(4)
+		sp = Root.CFrame
+		plr.Character.Humanoid:Destroy()
+		plr.Character = nil
+		plr.CharacterAdded:Wait()
+		plr.Character:WaitForChild(Root.Name).CFrame = sp
+	end
+end)
+
+AddCommand("ClockTime", true, true, function(Button, String)
+    if tonumber(String.Text) ~= nil then
+        game:GetService("Lighting").ClockTime = tonumber(String.Text)
+    end
+end)
+
+AddCommand("cash", true, true, function(Button, String)
+    local Cash = plr.leaderstats.Cash
+    local CurrentCash = plr.leaderstats.Cash.Value
+    local GCash = tonumber(String.Text)
+
+    workspace.Buy:FireServer(tonumber(CurrentCash))
+    workspace.Buy:FireServer(-tonumber(GCash))
+end)
+
+AddCommand("kill", true, true, function(Button, String)
+    if Player(String.Text) == nil then return end
+
+    for _, v in pairs(Player(String.Text)) do
+        Cloud(true)
+        Fire(plr.Character.PompousTheCloud.EffectCloud, "Name", "Head")
+        Fire(plr.Character.PompousTheCloud.Head, "Parent", v.Character)
+    end
+end)
+
+AddCommand("loop kill", true, true, function(Button, String)
+    if Player(String.Text) == nil then return end
+    if Button.Text == "Enable" then Button.Text = "Disable" elseif Button.Text == "Disable" then
+        Button.Text = "Enable"
+        _G.loopkill = false
+        return
+    end
+
+    _G.loopkill = true
+    while _G.loopkill do
+        for _, v in pairs(Player(String.Text)) do
+            Cloud(true)
+            Fire(plr.Character.PompousTheCloud.EffectCloud, "Name", "Head")
+            Fire(plr.Character.PompousTheCloud.Head, "Parent", v.Character)
+            v.CharacterAdded:Wait()
+        end
+    end
+end)
+
+AddCommand("void", true, true, function(Button, String)
+    if Player(String.Text) == nil then return end
+
+    for _, v in pairs(Player(String.Text)) do
+        Cloud(true)
+        Fire(plr.Character.PompousTheCloud.EffectCloud.Weld, "Part0", v.Character.HumanoidRootPart)
+        Fire(plr.Character.PompousTheCloud.EffectCloud, "CFrame", CFrame.new(0, -9e9, 0))
+    end
+end)
+
+AddCommand("loop void", true, true, function(Button, String)
+    if Player(String.Text) == nil then return end
+    if Button.Text == "Enable" then Button.Text = "Disable" elseif Button.Text == "Disable" then
+        Button.Text = "Enable"
+        _G.loopvoid = false
+        return
+    end
+
+    _G.loopvoid = true
+    while _G.loopvoid do
+        for _, v in pairs(Player(String.Text)) do
+            Cloud(true)
+            Fire(plr.Character.PompousTheCloud.EffectCloud.Weld, "Part0", v.Character.HumanoidRootPart)
+            Fire(plr.Character.PompousTheCloud.EffectCloud, "CFrame", CFrame.new(0, -9e9, 0))
+            v.CharacterAdded:Wait()
+        end
+    end
+end)
